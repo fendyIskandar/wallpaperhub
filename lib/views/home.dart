@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaperhub/data/data.dart';
 import 'package:wallpaperhub/model/categories_model.dart';
 import 'package:wallpaperhub/model/wallpaper_model.dart';
+import 'package:wallpaperhub/views/search.dart';
 import 'package:wallpaperhub/widgets/widgets.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,10 +17,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CategoriesModel> categories = [];
   List<WallpaperModel> wallpapers = [];
+  TextEditingController searchController = new TextEditingController();
 
   getTrendingWallpapers() async {
     var response = await http.get(
-        Uri.parse("https://api.pexels.com/v1/curated?per_page=15&per_page=1"),
+        Uri.parse("https://api.pexels.com/v1/curated?per_page=15&page=1"),
         headers: {"Authorization": apikey});
 
     //print(response.body.toString());
@@ -64,17 +66,24 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: searchController,
                       decoration: InputDecoration(
                           hintText: "Search Wallpaper",
                           border: InputBorder.none),
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: ((context) => ))
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => Search(
+                                searchQuery: searchController.text,
+                              )),
+                        ),
+                      );
                     },
-                    child: Container(
-                      child: Icon(Icons.search)),
+                    child: Container(child: Icon(Icons.search)),
                   )
                 ],
               ),
@@ -97,7 +106,7 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            wallpaperList(wallpapers: wallpapers, context: context)
+            wallpaperList(wallpapers: wallpapers, context: context),
           ],
         ),
       ),
