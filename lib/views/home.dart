@@ -1,7 +1,10 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:wallpaperhub/data/data.dart';
 import 'package:wallpaperhub/model/categories_model.dart';
 import 'package:wallpaperhub/widgets/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -11,8 +14,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CategoriesModel> categories = [];
 
+  getTrendingWallpapers() async {
+    var response = await http.get(
+        Uri.parse("https://api.pexels.com/v1/curated?per_page=15&per_page=1"),
+        headers: {"Authorization": apikey});
+
+    print(response.body.toString());
+  }
+
   @override
   void initState() {
+    getTrendingWallpapers();
     categories = getCategories();
     super.initState();
   }
