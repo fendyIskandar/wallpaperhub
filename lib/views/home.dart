@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:wallpaperhub/data/data.dart';
 import 'package:wallpaperhub/model/categories_model.dart';
+import 'package:wallpaperhub/model/wallpaper_model.dart';
 import 'package:wallpaperhub/widgets/widgets.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<CategoriesModel> categories = [];
+  List<WallpaperModel> wallpapers = [];
 
   getTrendingWallpapers() async {
     var response = await http.get(
@@ -20,6 +23,14 @@ class _HomeState extends State<Home> {
         headers: {"Authorization": apikey});
 
     print(response.body.toString());
+
+    Map<String, dynamic> jsonData = jsonDecode(response.body);
+    jsonData["photos"].forEach((element) {
+      //print(element);
+      WallpaperModel wallpaperModel = new WallpaperModel();
+      wallpaperModel = WallpaperModel.fromMap(element);
+      wallpapers.add(wallpaperModel);
+    });
   }
 
   @override
