@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
         Uri.parse("https://api.pexels.com/v1/curated?per_page=15&per_page=1"),
         headers: {"Authorization": apikey});
 
-    print(response.body.toString());
+    //print(response.body.toString());
 
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     jsonData["photos"].forEach((element) {
@@ -31,6 +31,8 @@ class _HomeState extends State<Home> {
       wallpaperModel = WallpaperModel.fromMap(element);
       wallpapers.add(wallpaperModel);
     });
+
+    setState(() {});
   }
 
   @override
@@ -48,7 +50,7 @@ class _HomeState extends State<Home> {
         title: brandName(),
         elevation: 0.0,
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
@@ -67,7 +69,13 @@ class _HomeState extends State<Home> {
                           border: InputBorder.none),
                     ),
                   ),
-                  Icon(Icons.search)
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: ((context) => ))
+                    },
+                    child: Container(
+                      child: Icon(Icons.search)),
+                  )
                 ],
               ),
             ),
@@ -89,6 +97,7 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
+            wallpaperList(wallpapers: wallpapers, context: context)
           ],
         ),
       ),
@@ -114,8 +123,10 @@ class CategoriesTile extends StatelessWidget {
                 fit: BoxFit.cover,
               )),
           Container(
-            alignment: Alignment.center,
-            color: Colors.black26,
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(8),
+            ),
             height: 50,
             width: 100,
             child: Text(
